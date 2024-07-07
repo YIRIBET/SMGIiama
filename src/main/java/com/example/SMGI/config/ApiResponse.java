@@ -34,4 +34,9 @@ public class ApiResponse {
         this.message = message;
 
     }
+
+    public ApiResponse(HttpStatus status, String message) {
+        this.status = status;
+        this.message = message;
+    }
 }
