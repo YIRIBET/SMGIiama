@@ -24,6 +24,7 @@ public class CategoryController {
         return service.saveCategory(dto.toEntity());
     }
 
+
     @GetMapping("/findOne/{id}")
     public ResponseEntity<ApiResponse> findOne(@PathVariable Long id){
         return service.findOne(id);
@@ -33,4 +34,6 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> delete(@PathVariable Long id){
         return service.delete(id);
     }
+
+
 }

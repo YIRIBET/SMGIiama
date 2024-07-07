@@ -22,7 +22,11 @@ public class CategoryService {
         if (categoryBean.getCategoryName() == null)
         return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,true,"categoría vacia"), HttpStatus.BAD_REQUEST);
         Optional<CategoryBean> foundCategory = repository.findCategoryBeanByCategoryName(categoryBean.getCategoryName());
+
         if (foundCategory.isPresent())
+
+        if (foundCategory.isEmpty())
+
         return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,true,"categoría ya registrada"), HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<>(new ApiResponse(repository.saveAndFlush(categoryBean),HttpStatus.OK,"guardado con exito"),HttpStatus.OK);
@@ -32,6 +36,7 @@ public class CategoryService {
     public ResponseEntity<ApiResponse>getAll(){
         return new ResponseEntity<>(new ApiResponse(repository.findAll(),HttpStatus.OK),HttpStatus.OK);
     }
+
     //findOne
     public ResponseEntity<ApiResponse>findOne(Long id){
         Optional<CategoryBean> foundCategory = repository.findById(id);
@@ -49,4 +54,5 @@ public class CategoryService {
         return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"categoria eliminada con exito"),HttpStatus.OK);
 
     }
+
 }
