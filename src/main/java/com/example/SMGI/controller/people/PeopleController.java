@@ -1,5 +1,5 @@
 package com.example.SMGI.controller.people;
-
+/*
 import com.example.SMGI.config.ApiResponse;
 import com.example.SMGI.controller.people.Dto.PeopleDto;
 import lombok.AllArgsConstructor;
@@ -30,3 +30,4 @@ public class PeopleController {
         return service.getAll();
     }
 }
+¨*/

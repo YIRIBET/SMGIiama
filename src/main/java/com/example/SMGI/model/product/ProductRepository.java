@@ -1,4 +1,4 @@
-package com.example.SMGI.model.producto;
+package com.example.SMGI.model.product;
 
 import org.springframework.stereotype.Repository;
 

@@ -1,5 +1,6 @@
-package com.example.SMGI.model.producto;
+package com.example.SMGI.model.product;
 
+import com.example.SMGI.model.category.CategoryBean;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,5 +27,10 @@ public class ProductBean {
     private String valor;
 
     //crear tabla intermedia para departamento
+
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private CategoryBean categoryBean;
 
 }
