@@ -36,4 +36,12 @@ public class ProductService {
     public ResponseEntity<ApiResponse> findAll(){
         return new ResponseEntity<>(new ApiResponse(repository.findAll(),HttpStatus.OK),HttpStatus.OK);
     }
+
+    public ResponseEntity<ApiResponse> findOne(Long id){
+        Optional<ProductBean> foundProduct = repository.findById(id);
+        if (foundProduct.isEmpty())
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"no se econtró el producto"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(repository.findById(id),HttpStatus.OK),HttpStatus.OK);
+
+    }
 }

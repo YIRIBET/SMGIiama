@@ -42,7 +42,7 @@ public class ProductBean {
     @ManyToMany(mappedBy = "productBeans")
     private Set<DepartmentBean> departmentBeans;
 
-
+    
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryBean categoryBean;

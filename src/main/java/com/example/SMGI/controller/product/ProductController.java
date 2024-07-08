@@ -20,6 +20,11 @@ public class ProductController {
         return service.findAll();
     }
 
+    @GetMapping("/findOne/{id}")
+    public ResponseEntity<ApiResponse> findOne(@PathVariable Long id){
+        return service.findOne(id);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<ApiResponse>save(@RequestBody ProductDto dto){
         System.err.println(dto.toString());
