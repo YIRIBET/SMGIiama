@@ -1,6 +1,7 @@
 package com.example.SMGI.model.category;
 
 import com.example.SMGI.model.product.ProductBean;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class CategoryBean {
         this.categoryName = categoryName;
     }
 
+    @JsonIgnore
     @OneToMany(mappedBy = "categoryBean")
     private Set<ProductBean> productBeans;
 
