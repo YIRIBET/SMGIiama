@@ -30,4 +30,9 @@ public class ProductController {
         System.err.println(dto.toString());
         return service.save(dto.toEntity());
     }
+
+    @GetMapping("/getByDepartmentId/{id}")
+    public ResponseEntity<ApiResponse> getByDepartment(@PathVariable Long id){
+        return service.findByDepartmentId(id);
+    }
 }

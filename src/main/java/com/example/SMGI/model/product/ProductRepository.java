@@ -1,5 +1,6 @@
 package com.example.SMGI.model.product;
 
+import com.example.SMGI.model.departament.DepartmentBean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,6 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<ProductBean,Long> {
     Optional<ProductBean> findByName(String name);
-    List<ProductBean> findAll();
+    List<ProductBean> findByDepartmentBeans(DepartmentBean bean);
 
 }

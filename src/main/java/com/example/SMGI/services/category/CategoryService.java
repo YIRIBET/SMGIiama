@@ -24,7 +24,7 @@ public class CategoryService {
     public ResponseEntity<ApiResponse> saveCategory(CategoryBean categoryBean){
         if (categoryBean.getCategoryName() == null)
         return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,true,"categoría vacia"), HttpStatus.BAD_REQUEST);
-        Optional<CategoryBean> foundCategory = repository.findCategoryBeanByCategoryName(categoryBean.getCategoryName());
+        Optional<CategoryBean> foundCategory = repository.findByCategoryName(categoryBean.getCategoryName());
 
         if (foundCategory.isPresent())
 

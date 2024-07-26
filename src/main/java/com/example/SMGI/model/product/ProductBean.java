@@ -33,10 +33,11 @@ public class ProductBean {
     //crear tabla intermedia para departamento
 
 
-    public ProductBean(String name, String caracteristicas, CategoryBean categoryBean) {
+    public ProductBean(String name, String caracteristicas, CategoryBean categoryBean, Set<DepartmentBean> departmentBeans) {
         this.name = name;
         this.caracteristicas = caracteristicas;
         this.categoryBean = categoryBean;
+        this.departmentBeans = departmentBeans;
     }
 
     @ManyToMany(mappedBy = "productBeans")
