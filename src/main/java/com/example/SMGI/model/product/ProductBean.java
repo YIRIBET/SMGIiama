@@ -26,16 +26,24 @@ public class ProductBean {
  /*   @Column(length = 50, nullable = false)
     private String status;*/
     @Column(length = 50, nullable = false)
-    private String caracteristicas;
+    private String description;
   /*  @Column(length = 50, nullable = false)
     private String valor;*/
 
     //crear tabla intermedia para departamento
 
 
-    public ProductBean(String name, String caracteristicas, CategoryBean categoryBean, Set<DepartmentBean> departmentBeans) {
+    public ProductBean(String name, String description, CategoryBean categoryBean, Set<DepartmentBean> departmentBeans) {
         this.name = name;
-        this.caracteristicas = caracteristicas;
+        this.description = description;
+        this.categoryBean = categoryBean;
+        this.departmentBeans = departmentBeans;
+    }
+
+    public ProductBean(Long id,String name, String description, CategoryBean categoryBean, Set<DepartmentBean> departmentBeans) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
         this.categoryBean = categoryBean;
         this.departmentBeans = departmentBeans;
     }

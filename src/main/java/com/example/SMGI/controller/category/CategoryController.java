@@ -35,5 +35,9 @@ public class CategoryController {
         return service.delete(id);
     }
 
+    @PutMapping ("/update")
+    public ResponseEntity<ApiResponse> update(@RequestBody CategoryDto dto){
+        return service.update(dto.toEntity());
+    }
 
 }

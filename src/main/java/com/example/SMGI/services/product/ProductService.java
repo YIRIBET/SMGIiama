@@ -52,13 +52,13 @@ public class ProductService {
         return new ResponseEntity<>(new ApiResponse(repository.save(productBean),HttpStatus.OK,"Guardado correctamente"),HttpStatus.OK);
     }
 
-    //getAll
+    //findAll
     @Transactional(rollbackFor = SQLException.class)
     public ResponseEntity<ApiResponse> findAll(){
         return new ResponseEntity<>(new ApiResponse(repository.findAll(),HttpStatus.OK),HttpStatus.OK);
     }
 
-    //findAll
+    //findOne
     @Transactional(rollbackFor = SQLException.class)
     public ResponseEntity<ApiResponse> findOne(Long id){
         Optional<ProductBean> foundProduct = repository.findById(id);
@@ -70,6 +70,7 @@ public class ProductService {
 
 
     //find by Department
+    @Transactional(rollbackFor = SQLException.class)
     public ResponseEntity<ApiResponse> findByDepartmentId(Long departmentId) {
         Optional<DepartmentBean> foundDepartment = departmentRepository.findById(departmentId);
         if (foundDepartment.isEmpty()) {
@@ -78,5 +79,44 @@ public class ProductService {
 
         List<ProductBean> products = repository.findByDepartmentBeans(foundDepartment.get());
         return new ResponseEntity<>(new ApiResponse(products, HttpStatus.OK, "Productos encontrados correctamente"), HttpStatus.OK);
+    }
+
+    //update
+    @Transactional(rollbackFor = SQLException.class)
+    public ResponseEntity<ApiResponse> update(ProductBean productBean ) {
+        Optional<ProductBean> foundProduct = repository.findById(productBean.getId());
+        if (foundProduct.isEmpty())
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,"no se encontró el producto a actualizar"),HttpStatus.NOT_FOUND);
+
+        Optional<CategoryBean> foundCategory = categoryRepository.findById(productBean.getCategoryBean().getId());
+        if (foundCategory.isEmpty())
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"no se econtró la categoría relacionada al producto"), HttpStatus.NOT_FOUND);
+        if (productBean.getName() ==  null)
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,true,"nombre nulo"), HttpStatus.BAD_REQUEST);
+        Set<DepartmentBean> validDepartments = new HashSet<>();
+
+        // Verificar que cada departamento asignado al producto existe
+        for (DepartmentBean department : productBean.getDepartmentBeans()) {
+            Optional<DepartmentBean> foundDepartment = departmentRepository.findById(department.getId());
+            if (foundDepartment.isEmpty()) {
+                return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND, true, "No se encontró el departamento con ID: " + department.getId()), HttpStatus.NOT_FOUND);
+            }
+
+            validDepartments.add(foundDepartment.get());
+            foundDepartment.get().getProductBeans().add(productBean);
+        }
+        productBean.setDepartmentBeans(validDepartments); // Establecer los departamentos válidos
+        return new ResponseEntity<>(new ApiResponse(repository.save(productBean),HttpStatus.OK,"Guardado correctamente"),HttpStatus.OK);
+    }
+
+    //delete
+    @Transactional(rollbackFor = SQLException.class)
+    public ResponseEntity<ApiResponse> delete (Long id){
+        Optional<ProductBean> foundProduct =repository.findById(id);
+        if (foundProduct.isEmpty())
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,"no se encontró el producto a eliminar"),HttpStatus.NOT_FOUND);
+        repository.deleteById(id);
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"eliminado con exito"),HttpStatus.OK);
+
     }
 }

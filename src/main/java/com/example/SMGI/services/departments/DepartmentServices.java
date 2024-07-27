@@ -59,4 +59,14 @@ public class DepartmentServices {
         return new ResponseEntity<>(new ApiResponse(foundDepartment,HttpStatus.OK,"eliminado con exito"),HttpStatus.OK);
     }
 
+    //update
+    @Transactional(rollbackFor = SQLException.class)
+    public ResponseEntity<ApiResponse>update (DepartmentBean departmentBean){
+        Optional<DepartmentBean> foundDepartment = repository.findById(departmentBean.getId());
+        if (foundDepartment.isEmpty())
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"Departamento NO ENCONTRADO"), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ApiResponse(repository.saveAndFlush(departmentBean),HttpStatus.OK,false,"departamento actualizado con exito"),HttpStatus.OK);
+
+    }
+
 }

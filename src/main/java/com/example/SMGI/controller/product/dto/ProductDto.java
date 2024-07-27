@@ -9,6 +9,7 @@ import java.util.Set;
 
 @Data
 public class ProductDto {
+    private Long id;
     private String name;
     private String description;
     private CategoryBean categoryBean;
@@ -17,4 +18,8 @@ public class ProductDto {
     public ProductBean toEntity(){
         return new ProductBean(name,description, categoryBean, departmentBeans);
     }
+    public ProductBean toEntityUpdate(){
+        return new ProductBean(id,name,description, categoryBean, departmentBeans);
+    }
+
 }

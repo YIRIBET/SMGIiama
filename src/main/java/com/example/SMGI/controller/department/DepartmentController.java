@@ -21,8 +21,15 @@ public class DepartmentController {
 
     @PostMapping("/save")
     public ResponseEntity<ApiResponse> save(@RequestBody DepartmentDto dto){
-        System.err.println(dto.getId());
         return service.createDepartment(dto.toEntity());
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse>delete (@PathVariable Long id){
+        return service.delete(id);
+    }
+    @PutMapping("/update")
+    public ResponseEntity<ApiResponse> update (@RequestBody DepartmentDto dto){
+        return service.update(dto.toEntity());
     }
 
 

@@ -5,6 +5,7 @@ import com.example.SMGI.model.category.CategoryBean;
 import com.example.SMGI.model.category.CategoryRepository;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -46,16 +47,36 @@ public class CategoryService {
             return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"no se encontró la categoría"),HttpStatus.NOT_FOUND);
             return new ResponseEntity<>(new ApiResponse(repository.findById(id),HttpStatus.OK),HttpStatus.OK);
     }
+
+
+
     //delete
     @Transactional(rollbackFor = {SQLException.class})
-    public ResponseEntity<ApiResponse> delete(Long id){
+    public ResponseEntity<ApiResponse> delete(Long id) {
         Optional<CategoryBean> foundCategory = repository.findById(id);
-        if (foundCategory.isEmpty())
-
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"no se encontró la categoría a eliminar"),HttpStatus.NOT_FOUND);
-        repository.deleteById(id);
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,"categoria eliminada con exito"),HttpStatus.OK);
-
+        if (foundCategory.isEmpty()) {
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND, true, "No se encontró la categoría a eliminar"), HttpStatus.NOT_FOUND);
+        }
+        try {
+            repository.deleteById(id);
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.OK, false, "Categoría eliminada con éxito"), HttpStatus.OK);
+        } catch (DataIntegrityViolationException e) {
+            // Maneja la excepción de violación de integridad de datos, como claves externas
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.CONFLICT, true, "No se puede eliminar la categoría ya que está asociada con productos existentes"), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            // Maneja otras excepciones generales
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, true, "Error inesperado al eliminar la categoría"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
+    //update
+    @Transactional(rollbackFor = {SQLException.class})
+    public ResponseEntity<ApiResponse> update(CategoryBean categoryBean){
+        Optional<CategoryBean> foundCategory = repository.findById(categoryBean.getId());
+        if (foundCategory.isEmpty())
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"no se encontró la categoría a actualizar"),HttpStatus.NOT_FOUND);
+        if (categoryBean.getCategoryName() == null)
+            return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,true,"categoría vacia"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(repository.saveAndFlush(categoryBean),HttpStatus.OK,"categoría actualizada con éxito"),HttpStatus.OK);
+    }
 }
