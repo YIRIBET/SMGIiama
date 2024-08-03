@@ -1,0 +1,36 @@
+
+
+//json para petición de crear
+{
+    "id":0,
+    "newName":"CREAR",
+    "newDescription":"DESCRIPCIÓN DE CREAR",
+    "categoryBean":{
+        "id":5
+    },
+    "departmentBean":{
+        "id":4
+    },
+    "reqType":"POST"
+}
+
+//json para petición de actualizar
+
+{
+    "id":0,
+
+    "newName":"ACTUALIZAR",
+    "newDescription":"DESCRIPCIÓN DE ACTUALIZAR",
+    "productBean":{
+        "id":15
+    },
+    "categoryBean":{
+        "id":1
+    },
+    "departmentBean":{
+        "id":4
+    },
+    "reqType":"UPDATE"
+}
+
+

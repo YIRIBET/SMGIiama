@@ -2,6 +2,7 @@ package com.example.SMGI.model.product;
 
 import com.example.SMGI.model.category.CategoryBean;
 import com.example.SMGI.model.departament.DepartmentBean;
+import com.example.SMGI.model.productReq.ProductRequestBean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,14 +24,10 @@ public class ProductBean {
     private long id;
     @Column(length = 50, nullable = false)
     private String name;
- /*   @Column(length = 50, nullable = false)
-    private String status;*/
+
     @Column(length = 50, nullable = false)
     private String description;
-  /*  @Column(length = 50, nullable = false)
-    private String valor;*/
 
-    //crear tabla intermedia para departamento
 
 
     public ProductBean(String name, String description, CategoryBean categoryBean, Set<DepartmentBean> departmentBeans) {
@@ -55,5 +52,9 @@ public class ProductBean {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryBean categoryBean;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "productBean", cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<ProductRequestBean> productRequests;
 
 }

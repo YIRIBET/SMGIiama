@@ -1,6 +1,7 @@
 package com.example.SMGI.model.departament;
 
 import com.example.SMGI.model.product.ProductBean;
+import com.example.SMGI.model.productReq.ProductRequestBean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,5 +41,8 @@ public class DepartmentBean {
     )
     private Set<ProductBean> productBeans;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "departmentBean", cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<ProductRequestBean> productRequests;
 
 }
