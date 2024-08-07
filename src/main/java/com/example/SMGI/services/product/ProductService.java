@@ -31,9 +31,13 @@ public class ProductService {
     //save
     @Transactional(rollbackFor = SQLException.class)
     public ResponseEntity<ApiResponse> save(ProductBean productBean ) {
+
+        //valida que exista la categoría que se quiere asignar
         Optional<CategoryBean> foundCategory = categoryRepository.findById(productBean.getCategoryBean().getId());
         if (foundCategory.isEmpty())
         return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"no se econtró la categoría relacionada al producto"), HttpStatus.NOT_FOUND);
+
+        //valida que no se mande un nombre nulo
         if (productBean.getName() ==  null)
             return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,true,"nombre nulo"), HttpStatus.BAD_REQUEST);
         Set<DepartmentBean> validDepartments = new HashSet<>();
@@ -52,11 +56,7 @@ public class ProductService {
         return new ResponseEntity<>(new ApiResponse(repository.save(productBean),HttpStatus.OK,"Guardado correctamente"),HttpStatus.OK);
     }
 
-    //findAll
-    @Transactional(rollbackFor = SQLException.class)
-    public ResponseEntity<ApiResponse> findAll(){
-        return new ResponseEntity<>(new ApiResponse(repository.findAll(),HttpStatus.OK),HttpStatus.OK);
-    }
+
 
     //findOne
     @Transactional(rollbackFor = SQLException.class)
@@ -79,6 +79,12 @@ public class ProductService {
 
         List<ProductBean> products = repository.findByDepartmentBeans(foundDepartment.get());
         return new ResponseEntity<>(new ApiResponse(products, HttpStatus.OK, "Productos encontrados correctamente"), HttpStatus.OK);
+    }
+
+    //findAll
+    @Transactional(rollbackFor = SQLException.class)
+    public ResponseEntity<ApiResponse> findAll(){
+        return new ResponseEntity<>(new ApiResponse(repository.findAll(),HttpStatus.OK),HttpStatus.OK);
     }
 
     //update

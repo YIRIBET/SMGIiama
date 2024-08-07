@@ -1,6 +1,7 @@
 package com.example.SMGI.model.category;
 
 import com.example.SMGI.model.product.ProductBean;
+import com.example.SMGI.model.productReq.ProductRequestBean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -28,5 +29,6 @@ public class CategoryBean {
     @OneToMany(mappedBy = "categoryBean")
     private Set<ProductBean> productBeans;
 
-
+    @OneToMany(mappedBy = "categoryBean", cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<ProductRequestBean> productRequests;
 }

@@ -1,0 +1,64 @@
+
+
+antes de eliminar una categoría elimina los productos relacionados a esta categoría para evitar
+excepciones SQL
+
+DELIMITER $$
+CREATE TRIGGER before_delete_category
+BEFORE DELETE ON category
+FOR EACH ROW
+BEGIN
+    DELETE FROM products
+    WHERE category_id = OLD.id;
+END$$
+DELIMITER ;
+
+antes de eliminar un producto elimina su registro en la tabla relacional de department_product
+y en product request
+
+DELIMITER $$
+create trigger before_delete_product
+ before delete on products
+ for each row
+ begin
+	delete from product_request where product_id = OLD.id;
+	delete from department_product where product_id = OLD.id;
+ end;$$
+
+
+#trigger para manejar solicitudes de creación y actualización de producto
+
+DELIMITER //
+CREATE TRIGGER after_update_product_request
+AFTER UPDATE ON product_request
+FOR EACH ROW
+BEGIN
+    DECLARE new_product_id BIGINT;
+
+    IF NEW.state = 'approved' THEN
+        IF NEW.req_type = 'POST' THEN
+            INSERT INTO products (description, name, category_id)
+            VALUES (NEW.new_description, NEW.new_name, NEW.category_id);
+
+            -- Obtener el id del producto recién insertado
+            SET new_product_id = LAST_INSERT_ID();
+
+            -- Insertar en department_product para la relación con departments
+            INSERT INTO department_product (department_id, product_id)
+            VALUES (NEW.department_id, new_product_id);
+
+        ELSEIF NEW.req_type = 'UPDATE' THEN
+            UPDATE products
+            SET description = NEW.new_description,
+                name = NEW.new_name,
+                category_id = NEW.category_id
+            WHERE id = NEW.product_id;
+
+            update department_product set department_id = NEW.department_id where product_id = NEW.product_id;
+
+        ELSEIF NEW.req_type = 'DELETE' THEN
+            DELETE FROM products WHERE id = NEW.product_id;
+        END IF;
+    END IF;
+END //
+DELIMITER ;
