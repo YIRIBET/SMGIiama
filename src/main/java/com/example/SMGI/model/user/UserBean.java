@@ -4,7 +4,6 @@ import com.example.SMGI.model.rol.RolBean;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import lombok.Setter;
 @Table(name="user")
 @Getter
 @Setter
-@AllArgsConstructor
+
 @NoArgsConstructor
 public class UserBean {
     @Id
@@ -37,5 +36,15 @@ public class UserBean {
             property = "rolId"
     )
     private RolBean rol;
+
+    public UserBean(long id, String name, String lastname, String surname, String username, String password, RolBean rol) {
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.surname = surname;
+        this.username = username;
+        this.password = password;
+        this.rol = rol;
+    }
 
 }
