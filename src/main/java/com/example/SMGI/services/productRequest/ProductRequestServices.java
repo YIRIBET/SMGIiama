@@ -27,31 +27,10 @@ public class ProductRequestServices {
     private final CategoryRepository categoryRepository;
     private final DepartmentRepository departmentRepository;
 
-    //Guardar solicitud de actualización de producto
-    @Transactional(rollbackFor = SQLException.class)
-    public ResponseEntity<ApiResponse> saveReq (ProductRequestBean productRequest){
 
-        //valida que el producto que se solicita actualizar exista
-        Optional<ProductBean> foundProduct = productRepository.findById(productRequest.getProductBean().getId());
-        if (foundProduct.isEmpty())
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"El producto que solicitas actualizar no existe"),HttpStatus.NOT_FOUND);
-
-        //valida que la nueva categoria del producto que se intenta actualizar exista
-        Optional<CategoryBean> foundCategory = categoryRepository.findById(productRequest.getCategoryBean().getId());
-        if (foundCategory.isEmpty())
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"la categoría de el producto que solicitas actualizar no existe"),HttpStatus.NOT_FOUND);
-
-        //valida que el nuevo departamento del producto que se intenta actualizar exista
-        Optional<DepartmentBean> foundDepartment = departmentRepository.findById(productRequest.getDepartmentBean().getId());
-        if (foundDepartment.isEmpty())
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"la categoría de el producto que solicitas actualizar no existe"),HttpStatus.NOT_FOUND);
-
-        productRequest.setState("pending");
-        return new ResponseEntity<>(new ApiResponse(repository.save(productRequest),HttpStatus.OK,false,"solicitud de actualización de "+foundProduct.get().getName()+" enviada con éxito"),HttpStatus.OK);
-    }
 
     @Transactional(rollbackFor = SQLException.class)
-    public ResponseEntity<ApiResponse>saveReqTest(ProductRequestBean productRequest){
+    public ResponseEntity<ApiResponse>saveReq(ProductRequestBean productRequest){
         String var = productRequest.getReqType();
         switch (var){
             case "POST":{
@@ -73,20 +52,24 @@ public class ProductRequestServices {
                 //valida que el producto que se solicita actualizar exista
                 Optional<ProductBean> foundProduct = productRepository.findById(productRequest.getProductBean().getId());
                 if (foundProduct.isEmpty())
-                    return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"El producto que solicitas actualizar no existe"),HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"El producto que solicitas actualizar no existe"),
+                            HttpStatus.NOT_FOUND);
 
                 //valida que la nueva categoria del producto que se intenta actualizar exista
                 Optional<CategoryBean> foundCategory = categoryRepository.findById(productRequest.getCategoryBean().getId());
                 if (foundCategory.isEmpty())
-                    return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"la categoría de el producto que solicitas actualizar no existe"),HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"la categoría de el producto que solicitas actualizar no existe"),
+                            HttpStatus.NOT_FOUND);
 
                 //valida que el nuevo departamento del producto que se intenta actualizar exista
                 Optional<DepartmentBean> foundDepartment = departmentRepository.findById(productRequest.getDepartmentBean().getId());
                 if (foundDepartment.isEmpty())
-                    return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"el departamento de el producto que solicitas actualizar no existe"),HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"el departamento de el producto que solicitas actualizar no existe"),
+                            HttpStatus.NOT_FOUND);
 
                 productRequest.setState("pending");
-                return new ResponseEntity<>(new ApiResponse(repository.save(productRequest),HttpStatus.OK,false,"solicitud de actualización de "+foundProduct.get().getName()+" enviada con éxito"),HttpStatus.OK);
+                return new ResponseEntity<>(new ApiResponse(repository.save(productRequest),HttpStatus.OK,false,"solicitud de actualización de "
+                        +foundProduct.get().getName()+" enviada con éxito"),HttpStatus.OK);
 
             }
             case "DELETE":{
@@ -115,17 +98,20 @@ public class ProductRequestServices {
     public ResponseEntity<ApiResponse> approveRequest (Long id){
         Optional<ProductRequestBean> foundRequest = repository.findById(id);
         if (foundRequest.isEmpty())
-        return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"La solicitud que intentas aprobar no existe"),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND,true,"La solicitud que intentas aprobar no existe"),
+                HttpStatus.NOT_FOUND);
 
         //debido a problemas de recursividad en el manejo de solicitudes DELETE, se borra directamente en el
         //repositorio de producto
        if (foundRequest.get().getReqType().equals("DELETE")){
            productRepository.deleteById(foundRequest.get().getProductBean().getId());
-           return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,false,"solcitud aprovada correctamente, se elimino el producto correctamente"),HttpStatus.OK);
+           return new ResponseEntity<>(new ApiResponse(HttpStatus.OK,false,"solcitud aprovada correctamente, se elimino el producto correctamente"),
+                   HttpStatus.OK);
        }
             ProductRequestBean productRequestBean = foundRequest.get();
             productRequestBean.setState("approved");
             System.err.println(productRequestBean);
-            return new ResponseEntity<>(new ApiResponse(repository.saveAndFlush(productRequestBean),HttpStatus.OK,false,"solicitud "+foundRequest.get().getReqType() + " aprovada con exito"),HttpStatus.OK);
+            return new ResponseEntity<>(new ApiResponse(repository.saveAndFlush(productRequestBean),HttpStatus.OK,false,"solicitud "
+                    +foundRequest.get().getReqType() + " aprovada con exito"),HttpStatus.OK);
        }
 }

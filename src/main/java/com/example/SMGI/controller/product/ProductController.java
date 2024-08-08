@@ -28,7 +28,6 @@ public class ProductController {
     //save
     @PostMapping("/save")
     public ResponseEntity<ApiResponse>save(@RequestBody ProductDto dto){
-        System.err.println(dto.toString());
         return service.save(dto.toEntity());
     }
     // encontrar productos según su departamento

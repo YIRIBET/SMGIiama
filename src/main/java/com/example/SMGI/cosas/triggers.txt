@@ -10,6 +10,9 @@ FOR EACH ROW
 BEGIN
     DELETE FROM products
     WHERE category_id = OLD.id;
+
+    DELETE FROM product_request
+        WHERE category_id = OLD.id;
 END$$
 DELIMITER ;
 

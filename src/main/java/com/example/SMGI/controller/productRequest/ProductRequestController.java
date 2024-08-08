@@ -18,7 +18,7 @@ public class ProductRequestController {
 
     @PostMapping("/saveUpdateReq")
     public ResponseEntity<ApiResponse> saveRequestTest (@RequestBody DtoProductRequest dtoProductRequest){
-        return services.saveReqTest(dtoProductRequest.toEntity());
+        return services.saveReq(dtoProductRequest.toEntity());
     }
 
     @GetMapping("/")
