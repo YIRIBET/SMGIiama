@@ -1,5 +1,6 @@
 package com.example.SMGI.model.user;
 
+import com.example.SMGI.model.category.CategoryBean;
 import com.example.SMGI.model.rol.RolBean;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -29,22 +30,18 @@ public class UserBean {
     @Column(length = 45,nullable = false)
     private String password;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name= "rolId")
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "rolId"
-    )
-    private RolBean rol;
+    @ManyToOne
+    @JoinColumn(name = "rol_id")
+    private RolBean rolBean;
 
-    public UserBean(long id, String name, String lastname, String surname, String username, String password, RolBean rol) {
+    public UserBean(long id, String name, String lastname, String surname, String username, String password, RolBean rolBean) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.surname = surname;
         this.username = username;
         this.password = password;
-        this.rol = rol;
+        this.rolBean = rolBean;
     }
 
 }

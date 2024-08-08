@@ -1,5 +1,6 @@
 package com.example.SMGI.model.rol;
 
+import com.example.SMGI.model.productReq.ProductRequestBean;
 import com.example.SMGI.model.user.UserBean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -23,9 +24,9 @@ public class RolBean {
      @Column(length = 45,nullable = false)
     private String rolName;
 
-     @JsonIgnore
-    @OneToMany(mappedBy = "rol",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private Set<UserBean> users;
+    @JsonIgnore
+    @OneToMany(mappedBy = "rolBean", cascade = CascadeType.ALL, orphanRemoval = true)
+    public Set<UserBean> userBeans;
 
    
 }

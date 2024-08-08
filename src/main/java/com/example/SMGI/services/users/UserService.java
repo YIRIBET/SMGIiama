@@ -1,6 +1,7 @@
 package com.example.SMGI.services.users;
 
 import com.example.SMGI.config.ApiResponse;
+import com.example.SMGI.model.rol.RolBean;
 import com.example.SMGI.model.rol.RolRepository;
 import com.example.SMGI.model.user.UserBean;
 import com.example.SMGI.model.user.UserRepository;
@@ -14,7 +15,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = {SQLException.class})
 @AllArgsConstructor
 
 public class UserService {
@@ -24,13 +25,22 @@ public class UserService {
     //Save
     @Transactional(rollbackFor = {SQLException.class})
     public ResponseEntity<ApiResponse> save(UserBean user) {
-        Optional<UserBean> found = repository.findById(user.getId());
-        if (found.isPresent()) {
+
+        //el id se genera automáticamente, por lo tanto o va en 0, o no se envía
+        //es mejor validar con el nombre de usuario, ya que con esto se hara el inicio de sesión en el sisitema
+
+
+        System.err.println("rol insertado " +user.getRolBean().getRolId());
+        Optional<UserBean> found = repository.findByUsername(user.getUsername());
+        if (found.isPresent())
             return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST, true, "El usuario ya existe"), HttpStatus.BAD_REQUEST);
-        } else {
-            repository.save(user);
-            return new ResponseEntity<>(new ApiResponse(HttpStatus.OK, false, "Registrado correctamente"), HttpStatus.OK);
-        }
+
+        Optional<RolBean> foundRol = rolRepository.findById(user.getRolBean().getRolId());
+        if (foundRol.isEmpty())
+             return new ResponseEntity<>(new ApiResponse(HttpStatus.NOT_FOUND, true, "El rol que intentas asignar, no existe"), HttpStatus.NOT_FOUND);
+
+            return new ResponseEntity<>(new ApiResponse( repository.save(user),HttpStatus.OK, false, "Registrado correctamente"), HttpStatus.OK);
+
         // return new ResponseEntity<>(new ApiResponse(HttpStatus.BAD_REQUEST,true,"No se encontro"), HttpStatus.BAD_REQUEST);
     }
 
